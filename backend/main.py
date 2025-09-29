@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from app.db.session import create_db_and_tables
-from app.api import auth, clients, assets, allocations, movements, reports
+from app.backend.db.session import create_db_and_tables
+from app.backend.api.api_v1.endpoints import auth, clients, assets, allocations, movements, reports
 
 def create_app():
     app = FastAPI(title="Escritório de Investimentos API")

@@ -1,15 +1,21 @@
 FROM python:3.10-slim
 
-WORKDIR /app/backend
-
-# system deps for psycopg2
-RUN apt-get update && apt-get install -y build-essential libpq-dev && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /
 
 COPY . .
 
-ENV PYTHONUNBUFFERED=1
+# Copy only requirements first for caching
+COPY requirements.txt ./ 
 
-CMD ["uvicorn", "app.backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the backend code
+COPY . ./
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
+
+# Run uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

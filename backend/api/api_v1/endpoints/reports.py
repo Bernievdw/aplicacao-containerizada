@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import Optional
 from datetime import date
-from app.api.deps import get_db, get_current_user
-from app import crud
+from app.backend.deps import get_db, get_current_user
+from app.backend.crud import crud
 
 router = APIRouter(prefix="/api/reports", tags=["reports"], dependencies=[Depends(get_current_user)])
 

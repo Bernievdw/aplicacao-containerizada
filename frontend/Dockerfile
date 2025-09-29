@@ -1,8 +1,19 @@
-FROM node:20-alpine
+FROM node:20-alpine AS build
 
-WORKDIR /app/frontend
-COPY package.json package-lock.json* ./
-RUN npm ci --legacy-peer-deps || npm install
+WORKDIR /app
+
+# Install dependencies first
+COPY package*.json ./
+RUN npm install
+
+# Copy the rest of the frontend
 COPY . .
-EXPOSE 3000
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "3000"]
+
+# Build the frontend
+RUN npm run build
+
+# Serve with nginx
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

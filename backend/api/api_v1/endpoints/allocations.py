@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.api.deps import get_db, get_current_user
-from app import crud
-from app.schemas import AllocationCreate, AllocationRead
+from app.backend.deps import get_db, get_current_user
+from app.backend.crud import crud
+from app.backend.schemas.schemas import AllocationCreate, AllocationRead
 
 router = APIRouter(prefix="/api/allocations", tags=["allocations"], dependencies=[Depends(get_current_user)])
 

@@ -1,35 +1,37 @@
 services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: invest
-      POSTGRES_USER: invest
-      POSTGRES_PASSWORD: invest
-    volumes:
-      - invest-db:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: postgres://invest:invest@db:5432/invest
-      JWT_SECRET: changeme
+    build: ./backend
+    container_name: backend
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Uncomment if using a DB
+    # depends_on:
+    #   - db
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:80"
     depends_on:
       - backend
-    ports:
-      - "3000:3000"
 
-volumes:
-  invest-db:
+  # Optional database (Postgres example)
+  # db:
+  #   image: postgres:15
+  #   container_name: db
+  #   environment:
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+  #     POSTGRES_DB: mydb
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+
+# volumes:
+#   postgres_data:

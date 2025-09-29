@@ -1,6 +1,6 @@
 from sqlmodel import select
 from sqlalchemy.exc import NoResultFound
-from app import models
+from app.backend.models import models
 from sqlmodel import Session
 from typing import Optional, List
 import yfinance as yf
